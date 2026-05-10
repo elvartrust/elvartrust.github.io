@@ -1,14 +1,2890 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-    <script type="module" crossorigin src="/assets/index-D2mBZdKv.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BzDxyY-O.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elvar Trust — Given to Give</title>
+  <meta name="description"
+    content="Elvar Trust — A charitable trust in Bangalore serving through Education, Food, Healthcare and Mental Health. Given to Give.">
+
+  <!-- ═══════════════════════════════════════════════
+     SECURITY HEADERS (meta-level for static sites)
+     ═══════════════════════════════════════════════ -->
+
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://*.razorpay.com;
+    style-src  'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src   'self' https://fonts.gstatic.com;
+    img-src    'self' https://images.unsplash.com https://*.razorpay.com data:;
+    frame-src  https://calendar.google.com https://*.razorpay.com;
+    connect-src 'self' https://api.web3forms.com https://*.razorpay.com;
+    object-src 'none';
+    base-uri   'self';
+    form-action 'self' https://api.web3forms.com;
+    upgrade-insecure-requests;
+  ">
+
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy"
+    content="camera=(), microphone=(), geolocation=(), payment=(self), usb=(), bluetooth=()">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+
+  <style>
+    :root {
+      --cream: #FDF8F2;
+      --amber: #D4930A;
+      --amber-light: #F2C14E;
+      --terra: #B84A26;
+      --terra-light: #D96B42;
+      --deep: #4A1F08;
+      --sage: #5E8A62;
+      --warm-gray: #7A6858;
+      --white: #FFFEF9;
+      --text: #2E1A0E;
+      --light-terra: #F5E8DC;
+      --gold: #C8960A;
+      --section-pad: 6rem 2rem;
+      --radius: 20px;
+      --shadow-sm: 0 4px 20px rgba(74, 31, 8, 0.08);
+      --shadow-md: 0 12px 50px rgba(74, 31, 8, 0.14);
+      --shadow-lg: 0 24px 80px rgba(74, 31, 8, 0.18);
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+      overflow-y: visible;
+      line-height: 1.6;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: 'Cormorant Garamond', serif;
+      line-height: 1.2;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal-left.visible,
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 900;
+      background: rgba(253, 248, 242, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(184, 74, 38, 0.1);
+      padding: 0 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      transition: box-shadow var(--transition), background var(--transition);
+    }
+
+    nav.scrolled {
+      box-shadow: 0 4px 30px rgba(74, 31, 8, 0.1);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .nav-logo .logo-ring {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--terra), var(--deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 3px 12px rgba(184, 74, 38, 0.35);
+    }
+
+    .nav-logo .brand-wrap .name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--deep);
+      line-height: 1;
+    }
+
+    .nav-logo .brand-wrap .tag {
+      font-size: 0.6rem;
+      color: var(--terra);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-top: 2px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--warm-gray);
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--terra);
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--terra), var(--deep));
+      color: white;
+      border: none;
+      padding: 0.55rem 1.4rem;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      box-shadow: 0 3px 12px rgba(184, 74, 38, 0.3);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(184, 74, 38, 0.4);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--terra);
+      border-radius: 2px;
+      display: block;
+      transition: var(--transition);
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: var(--cream);
+      z-index: 899;
+      padding: 1.5rem 2rem 2rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      flex-direction: column;
+      gap: 1.2rem;
+      border-top: 2px solid var(--light-terra);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu a {
+      color: var(--deep);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--light-terra);
+    }
+
+    .mob-cta {
+      background: linear-gradient(135deg, var(--terra), var(--deep));
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    #hero {
+      min-height: 100vh;
+      padding-top: 70px;
+      background: linear-gradient(160deg, #3A1206 0%, #6B2710 25%, #A83E1E 55%, #C87030 80%, #D4930A 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-texture {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(ellipse at 20% 50%, rgba(255, 255, 255, 0.04) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(212, 147, 10, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 40%);
+    }
+
+    .hero-orbs {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hero-orbs span {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      animation: orb-pulse 8s ease-in-out infinite;
+    }
+
+    .hero-orbs span:nth-child(1) {
+      width: 500px;
+      height: 500px;
+      top: -150px;
+      left: -150px;
+      animation-delay: 0s;
+    }
+
+    .hero-orbs span:nth-child(2) {
+      width: 700px;
+      height: 700px;
+      bottom: -250px;
+      right: -200px;
+      animation-delay: 2s;
+    }
+
+    .hero-orbs span:nth-child(3) {
+      width: 300px;
+      height: 300px;
+      top: 30%;
+      left: 55%;
+      animation-delay: 4s;
+    }
+
+    .hero-orbs span:nth-child(4) {
+      width: 180px;
+      height: 180px;
+      top: 15%;
+      right: 20%;
+      animation-delay: 6s;
+    }
+
+    @keyframes orb-pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+
+      50% {
+        transform: scale(1.08);
+        opacity: 1;
+      }
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1200px;
+      width: 100%;
+      padding: 4rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-text {
+      color: white;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber-light);
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-text h1 em {
+      color: var(--amber-light);
+      font-style: italic;
+    }
+
+    .hero-quote {
+      font-size: 1rem;
+      font-style: italic;
+      opacity: 0.82;
+      line-height: 1.75;
+      margin-bottom: 2rem;
+      padding-left: 1rem;
+      border-left: 3px solid rgba(212, 147, 10, 0.6);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+    }
+
+    .hero-pillars {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.2rem;
+    }
+
+    .pillar-tag {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--terra);
+      padding: 0.85rem 2rem;
+      border-radius: 32px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: white;
+      padding: 0.85rem 2rem;
+      border-radius: 32px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      font-family: 'DM Sans', sans-serif;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .hero-card-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .hero-stat-card {
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      backdrop-filter: blur(8px);
+      transition: background var(--transition);
+    }
+
+    .hero-stat-card:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .hero-stat-card .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--amber-light);
+      line-height: 1;
+    }
+
+    .hero-stat-card .stat-label {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    .hero-stat-card .stat-desc {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.78rem;
+      margin-top: 0.2rem;
+    }
+
+    .hero-quote-card {
+      background: rgba(212, 147, 10, 0.15);
+      border: 1px solid rgba(212, 147, 10, 0.3);
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      backdrop-filter: blur(8px);
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.88rem;
+      font-style: italic;
+      line-height: 1.6;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+    }
+
+    .scroll-hint {
+      margin-top: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .scroll-arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 2px solid rgba(255, 255, 255, 0.35);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+      transform: rotate(45deg);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: rotate(45deg) translateY(0);
+      }
+
+      50% {
+        transform: rotate(45deg) translateY(4px);
+      }
+    }
+
+    .wave-divider {
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+      margin-bottom: -2px;
+    }
+
+    .wave-divider svg {
+      display: block;
+      width: 100%;
+    }
+
+    section {
+      padding: var(--section-pad);
+    }
+
+    .section-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--terra);
+      font-weight: 600;
+      margin-bottom: 0.7rem;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 2px;
+      background: var(--terra);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      color: var(--deep);
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .section-sub {
+      color: var(--warm-gray);
+      font-size: 1rem;
+      max-width: 560px;
+      line-height: 1.75;
+      margin-bottom: 3rem;
+    }
+
+    #about {
+      background: var(--light-terra);
+      position: relative;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-text-col p {
+      color: var(--warm-gray);
+      line-height: 1.85;
+      margin-bottom: 1.1rem;
+      font-size: 0.97rem;
+    }
+
+    .est-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--amber);
+      color: white;
+      padding: 0.45rem 1.1rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-top: 0.8rem;
+    }
+
+    .about-visual-col {
+      position: relative;
+    }
+
+    .about-card {
+      background: linear-gradient(145deg, var(--terra), var(--deep));
+      border-radius: 24px;
+      padding: 2.5rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .about-card::after {
+      content: '';
+      position: absolute;
+      bottom: 1.5rem;
+      right: 2rem;
+      font-size: 6rem;
+      opacity: 0.06;
+      line-height: 1;
+    }
+
+    .about-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .about-card p {
+      opacity: 0.85;
+      line-height: 1.8;
+      font-size: 0.95rem;
+    }
+
+    .mission-chips {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+
+    .mission-chip {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.8rem;
+    }
+
+    #founders {
+      background: var(--white);
+    }
+
+    .founders-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+
+    .founder-card {
+      background: var(--cream);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+      border: 1px solid rgba(184, 74, 38, 0.08);
+    }
+
+    .founder-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .founder-photo-area {
+      height: 260px;
+      background: linear-gradient(145deg, var(--light-terra), #EDD5C0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .founder-photo-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .founder-photo-placeholder {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--terra), var(--deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 8px 32px rgba(184, 74, 38, 0.3);
+      border: 4px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .founder-photo-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(74, 31, 8, 0.6);
+      color: white;
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      backdrop-filter: blur(4px);
+    }
+
+    .founder-body {
+      padding: 2rem;
+    }
+
+    .founder-role {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--terra);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .founder-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--deep);
+      margin-bottom: 0.2rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .founder-title {
+      font-size: 0.85rem;
+      color: var(--warm-gray);
+      margin-bottom: 1rem;
+    }
+
+    .founder-bio {
+      font-size: 0.9rem;
+      color: var(--warm-gray);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+
+    .founder-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .founder-tag {
+      background: var(--light-terra);
+      color: var(--terra);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.76rem;
+      font-weight: 600;
+    }
+
+    #mission {
+      background: var(--cream);
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .mission-card {
+      border-radius: 20px;
+      padding: 2.2rem;
+      transition: transform var(--transition), box-shadow var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-card::after {
+      content: attr(data-icon);
+      position: absolute;
+      right: -0.5rem;
+      bottom: -1rem;
+      font-size: 5rem;
+      opacity: 0.08;
+    }
+
+    .mission-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .mission-card.edu {
+      background: linear-gradient(145deg, #FFF8EE, #FFE9C5);
+    }
+
+    .mission-card.food {
+      background: linear-gradient(145deg, #EEF7EE, #C9E8CA);
+    }
+
+    .mission-card.health {
+      background: linear-gradient(145deg, #FEF0EE, #F9C4BB);
+    }
+
+    .mission-card.mental {
+      background: linear-gradient(145deg, #EEF0FB, #C8CDF2);
+    }
+
+    .mission-icon {
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .mission-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.6rem;
+      color: var(--deep);
+    }
+
+    .mission-card p {
+      font-size: 0.88rem;
+      color: var(--warm-gray);
+      line-height: 1.7;
+    }
+
+    #gallery {
+      background: var(--white);
+    }
+
+    .gallery-tabs {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .gtab {
+      padding: 0.55rem 1.4rem;
+      border-radius: 30px;
+      border: 2px solid var(--light-terra);
+      background: white;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--warm-gray);
+      transition: all var(--transition);
+    }
+
+    .gtab.active,
+    .gtab:hover {
+      background: var(--terra);
+      color: white;
+      border-color: var(--terra);
+      box-shadow: 0 4px 16px rgba(184, 74, 38, 0.25);
+    }
+
+    .gallery-desc {
+      background: var(--light-terra);
+      border-left: 4px solid var(--terra);
+      padding: 1rem 1.5rem;
+      border-radius: 0 14px 14px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      color: var(--warm-gray);
+      line-height: 1.7;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+      position: relative;
+      background: var(--light-terra);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.025);
+      box-shadow: var(--shadow-md);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .thumb-cap {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(45, 15, 5, 0.85));
+      color: white;
+      padding: 2.5rem 1rem 0.9rem;
+      font-size: 0.79rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(15, 5, 2, 0.94);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lb-inner {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      max-width: 860px;
+      width: 100%;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 40px 120px rgba(0, 0, 0, 0.5);
+    }
+
+    .lb-img {
+      width: 100%;
+      height: 440px;
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    .lb-body {
+      padding: 1.8rem 2rem;
+      overflow-y: auto;
+    }
+
+    .lb-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      color: var(--deep);
+      margin-bottom: 0.5rem;
+    }
+
+    .lb-desc {
+      color: var(--warm-gray);
+      font-size: 0.93rem;
+      line-height: 1.7;
+    }
+
+    .lb-cat {
+      display: inline-block;
+      margin-top: 0.8rem;
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .lb-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: white;
+      border: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+      color: var(--deep);
+      z-index: 10;
+      font-weight: 700;
+    }
+
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.92);
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+      color: var(--deep);
+      z-index: 10;
+      transition: background var(--transition);
+    }
+
+    .lb-nav:hover {
+      background: white;
+    }
+
+    .lb-prev {
+      left: 1rem;
+    }
+
+    .lb-next {
+      right: 1rem;
+    }
+
+    .lb-counter {
+      position: absolute;
+      top: 1rem;
+      left: 1.2rem;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 0.78rem;
+      padding: 0.28rem 0.75rem;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    #donate {
+      background: linear-gradient(160deg, var(--deep) 0%, #7A2E12 40%, var(--terra) 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #donate::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      right: -200px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: rgba(212, 147, 10, 0.08);
+      pointer-events: none;
+    }
+
+    .donate-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    #donate .section-eyebrow {
+      color: var(--amber-light);
+    }
+
+    #donate .section-eyebrow::before {
+      background: var(--amber-light);
+    }
+
+    #donate .section-title {
+      color: white;
+    }
+
+    #donate .section-sub {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .amount-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .amt-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      color: white;
+      padding: 0.8rem;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .amt-btn:hover,
+    .amt-btn.selected {
+      background: var(--amber);
+      border-color: var(--amber);
+      color: var(--deep);
+      box-shadow: 0 4px 16px rgba(212, 147, 10, 0.4);
+    }
+
+    .custom-amt {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      transition: border-color var(--transition);
+    }
+
+    .custom-amt::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .custom-amt:focus {
+      outline: none;
+      border-color: var(--amber-light);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .rzp-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--amber), var(--gold));
+      color: var(--deep);
+      border: none;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 4px 20px rgba(212, 147, 10, 0.35);
+      letter-spacing: 0.02em;
+    }
+
+    .rzp-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(212, 147, 10, 0.5);
+    }
+
+    .bank-box {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 1.6rem;
+      margin-top: 2rem;
+    }
+
+    .bank-box h4 {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      color: var(--amber-light);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+    }
+
+    .bank-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.88rem;
+    }
+
+    .bank-row:last-child {
+      border: none;
+    }
+
+    .bank-row .lbl {
+      opacity: 0.6;
+    }
+
+    .bank-row .val {
+      font-weight: 600;
+    }
+
+    .upi-pill {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--amber), var(--gold));
+      color: var(--deep);
+      padding: 0.45rem 1.3rem;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-top: 1rem;
+    }
+
+    .donor-fields {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      padding: 1.4rem 1.4rem 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .donor-fields-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--amber-light);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .donor-fields-title::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: var(--amber-light);
+    }
+
+    .donor-field-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .donor-field-group label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .donor-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .donor-input::placeholder {
+      color: rgba(255, 255, 255, 0.38);
+    }
+
+    .donor-input:focus {
+      outline: none;
+      border-color: var(--amber-light);
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .donor-input.pan-input {
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+
+    .donor-fields-note {
+      font-size: 0.74rem;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 0.3rem;
+      line-height: 1.5;
+    }
+
+    .donate-impact {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .impact-item {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .impact-item:last-child {
+      border: none;
+    }
+
+    .impact-emoji {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      width: 44px;
+      text-align: center;
+    }
+
+    .impact-item strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--amber-light);
+      margin-bottom: 0.2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+    }
+
+    .impact-item span {
+      font-size: 0.85rem;
+      opacity: 0.72;
+      line-height: 1.5;
+    }
+
+    .donate-trust {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .trust-line {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      opacity: 0.65;
+    }
+
+    #volunteer {
+      background: var(--light-terra);
+    }
+
+    .vol-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .vol-reasons {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .vol-reason {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(184, 74, 38, 0.1);
+    }
+
+    .vol-reason:last-child {
+      border: none;
+    }
+
+    .vol-dot {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--terra), var(--deep));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      margin-top: 2px;
+      box-shadow: 0 3px 10px rgba(184, 74, 38, 0.25);
+    }
+
+    .vol-reason p {
+      font-size: 0.92rem;
+      color: var(--warm-gray);
+      line-height: 1.65;
+    }
+
+    .vol-reason strong {
+      color: var(--deep);
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.95rem;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2.2rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .form-card h3 {
+      font-size: 1.5rem;
+      color: var(--deep);
+      margin-bottom: 1.6rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--warm-gray);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1.5px solid #E8D8CA;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text);
+      background: var(--cream);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--terra);
+      box-shadow: 0 0 0 3px rgba(184, 74, 38, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 0.95rem;
+      background: linear-gradient(135deg, var(--terra), var(--deep));
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      margin-top: 0.5rem;
+      letter-spacing: 0.02em;
+      box-shadow: 0 4px 16px rgba(184, 74, 38, 0.3);
+    }
+
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(184, 74, 38, 0.4);
+    }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+      color: var(--sage);
+      font-size: 1rem;
+    }
+
+    #events {
+      background: var(--cream);
+    }
+
+    .cal-wrapper {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cal-tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      background: var(--light-terra);
+      border-radius: 14px;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      color: var(--warm-gray);
+      line-height: 1.65;
+    }
+
+    .cal-tip a {
+      color: var(--terra);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .cal-tip a:hover {
+      text-decoration: underline;
+    }
+
+    .gcal-embed {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      min-height: 600px;
+      display: block;
+    }
+
+    #enquiry {
+      background: var(--white);
+    }
+
+    .enquiry-inner {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    #contact {
+      background: var(--light-terra);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    .contact-info h3 {
+      font-size: 1.8rem;
+      color: var(--deep);
+      margin-bottom: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .contact-icon {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      border-radius: 12px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .contact-item .text strong {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--warm-gray);
+      margin-bottom: 0.15rem;
+    }
+
+    .contact-item .text span {
+      font-size: 0.93rem;
+      color: var(--deep);
+      line-height: 1.55;
+    }
+
+    .contact-map-box {
+      border-radius: 20px;
+      overflow: hidden;
+      height: 300px;
+      background: linear-gradient(160deg, var(--terra), var(--deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .social-row {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: 1.8rem;
+    }
+
+    .social-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--terra);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: background var(--transition), transform var(--transition);
+      box-shadow: 0 3px 10px rgba(184, 74, 38, 0.2);
+    }
+
+    .social-btn:hover {
+      background: var(--deep);
+      transform: translateY(-3px);
+    }
+
+    footer {
+      background: var(--deep);
+      color: rgba(255, 255, 255, 0.75);
+    }
+
+    .footer-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 4rem 2rem 2.5rem;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand .f-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--terra), var(--amber));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .footer-brand .f-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--amber-light);
+      font-weight: 700;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      line-height: 1.75;
+      opacity: 0.65;
+      max-width: 280px;
+    }
+
+    .footer-col h4 {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+    }
+
+    .footer-col a {
+      display: block;
+      color: rgba(255, 255, 255, 0.65);
+      text-decoration: none;
+      font-size: 0.87rem;
+      margin-bottom: 0.6rem;
+      transition: color var(--transition);
+    }
+
+    .footer-col a:hover {
+      color: var(--amber-light);
+    }
+
+    .footer-col span {
+      display: block;
+      font-size: 0.85rem;
+      opacity: 0.55;
+      margin-bottom: 0.4rem;
+      line-height: 1.55;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.78rem;
+      opacity: 0.4;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--deep);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      transform: translateY(120px);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+      max-width: 340px;
+      border-left: 4px solid var(--amber);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width:900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .hero-card-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .about-grid,
+      .founders-grid,
+      .donate-grid,
+      .vol-grid,
+      .contact-grid,
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .hero-card-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width:768px) {
+
+      .nav-links,
+      .nav-cta {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      :root {
+        --section-pad: 4rem 1.2rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .amount-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      nav {
+        padding: 0 1.2rem;
+      }
+
+      .lb-img {
+        height: 240px;
+      }
+
+      .hero-card-col {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav id="mainNav">
+    <a class="nav-logo" href="#hero" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'})"
+      aria-label="Elvar Trust Home">
+      <div class="logo-ring" aria-hidden="true">E</div>
+      <div class="brand-wrap">
+        <span class="name">Elvar Trust</span>
+        <span class="tag">Given to Give</span>
+      </div>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="#about">About</a></li>
+      <li><a href="#founders">Founders</a></li>
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#volunteer">Volunteer</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-cta" onclick="document.getElementById('donate').scrollIntoView({behavior:'smooth'})"
+      aria-label="Donate Now">💛 Donate</button>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu" aria-expanded="false" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
+    <a href="#about" onclick="closeMenu()">About</a>
+    <a href="#founders" onclick="closeMenu()">Founders</a>
+    <a href="#mission" onclick="closeMenu()">Mission</a>
+    <a href="#gallery" onclick="closeMenu()">Gallery</a>
+    <a href="#events" onclick="closeMenu()">Events</a>
+    <a href="#volunteer" onclick="closeMenu()">Volunteer</a>
+    <a href="#enquiry" onclick="closeMenu()">Enquiry</a>
+    <a href="#contact" onclick="closeMenu()">Contact</a>
+    <button class="mob-cta"
+      onclick="document.getElementById('donate').scrollIntoView({behavior:'smooth'});closeMenu()">💛 Donate Now</button>
+  </div>
+
+  <!-- HERO -->
+  <section id="hero" aria-label="Welcome to Elvar Trust">
+    <div class="hero-texture" aria-hidden="true"></div>
+    <div class="hero-orbs" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-badge"><span class="dot" aria-hidden="true"></span> Est. 2026 · Basavanagudi, Bangalore</div>
+        <h1>Serving Others is<br>the <em>Greatest Gift</em><br>We Can Give</h1>
+        <blockquote class="hero-quote">
+          The one who gives freely grows richer still; the one who withholds only impoverishes themselves. True
+          abundance is found in the act of giving.
+        </blockquote>
+        <div class="hero-pillars" aria-label="Our focus areas">
+          <span class="pillar-tag">📚 Education</span>
+          <span class="pillar-tag">🌾 Food</span>
+          <span class="pillar-tag">🏥 Healthcare</span>
+          <span class="pillar-tag">🕊️ Mental Health</span>
+        </div>
+        <div class="hero-btns">
+          <button class="btn-white" onclick="document.getElementById('donate').scrollIntoView({behavior:'smooth'})">💛
+            Donate Now</button>
+          <a href="#volunteer" class="btn-ghost">Join as Volunteer</a>
+        </div>
+        <div class="scroll-hint" aria-hidden="true">
+          <div class="scroll-arrow"></div>
+          Scroll to explore
+        </div>
+      </div>
+      <div class="hero-card-col">
+        <div class="hero-stat-card">
+          <div class="stat-num">4+</div>
+          <div class="stat-label">Years of Giving</div>
+          <div class="stat-desc">Informally serving since 2022</div>
+        </div>
+        <div class="hero-stat-card">
+          <div class="stat-num">4</div>
+          <div class="stat-label">Causes We Champion</div>
+          <div class="stat-desc">Education · Food · Health · Mind</div>
+        </div>
+        <div class="hero-quote-card">
+          "We don't wait for perfect conditions. We serve now, with what we have — because someone out there cannot
+          wait."
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT TRUST -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="about-grid">
+        <div class="about-text-col reveal-left">
+          <span class="section-eyebrow">Our Story</span>
+          <h2 class="section-title">More Than a Trust —<br>A Movement of Grace</h2>
+          <p>Elvar Trust is a registered charitable trust based in Basavanagudi, Bangalore. While our formal journey
+            began in 2026, the spirit behind it has been alive for years — in quiet meals shared, in school supplies
+            given, in medical bills quietly settled for those who couldn't afford it.</p>
+          <p>We don't wait for large budgets or perfect conditions. We serve now, with what we have, together with a
+            community of friends, family, and colleagues who believe that generosity is contagious.</p>
+          <p>Our four pillars — Education, Food, Healthcare, and Mental Health — represent the most fundamental needs of
+            the most vulnerable people around us. Every initiative we run flows from a simple conviction: every person
+            deserves dignity.</p>
+          <span class="est-badge">🌱 Informally Serving Since 2022 · Formally Est. 2026</span>
+        </div>
+        <div class="about-visual-col reveal-right">
+          <div class="about-card">
+            <h3>Rooted in Compassion</h3>
+            <p>Born from a conviction that every person deserves dignity — access to learning, nourishment, healing, and
+              hope. Long before formal registration, our founders were already quietly serving — through personal funds,
+              through colleagues who believed in the same cause.</p>
+            <p style="margin-top:1rem;opacity:0.75;font-size:0.9rem;">We believe giving is not an act but a way of life.
+            </p>
+            <div class="mission-chips">
+              <span class="mission-chip">📚 Education</span>
+              <span class="mission-chip">🌾 Food</span>
+              <span class="mission-chip">🏥 Healthcare</span>
+              <span class="mission-chip">🕊️ Mental Health</span>
+              <span class="mission-chip">📍 Bangalore</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDERS -->
+  <section id="founders">
+    <div class="section-inner">
+      <span class="section-eyebrow">The People Behind the Purpose</span>
+      <h2 class="section-title reveal">Meet Our Founders</h2>
+      <p class="section-sub reveal">Two individuals bound by a shared conviction — that giving is not a transaction, but
+        a way of life.</p>
+      <div class="founders-grid">
+        <div class="founder-card reveal delay-1">
+          <div class="founder-photo-area">
+            <div class="founder-photo-placeholder" aria-label="Photo placeholder for Richard Sundara Raju">R</div>
+            <div class="founder-photo-label">Upload photo — see instructions in code</div>
+          </div>
+          <div class="founder-body">
+            <div class="founder-role">Co-founder & Managing Trustee</div>
+            <h3 class="founder-name">Richard Sundara Raju</h3>
+            <div class="founder-title">Senior Technology Leader · Community Servant</div>
+            <p class="founder-bio">Richard is a seasoned technology executive and a devoted community servant. With over
+              two decades in the IT industry, he brings strategic thinking and operational excellence to Elvar Trust.
+              Deeply committed to his faith and community, Richard has been quietly funding and serving underprivileged
+              communities long before the trust was formally established.</p>
+            <p class="founder-bio">He believes that true leadership is measured not by position but by the lives you
+              lift. Richard leads the trust's vision, partnerships, and programmes with warmth and conviction.</p>
+            <div class="founder-tags">
+              <span class="founder-tag">Technology Leader</span>
+              <span class="founder-tag">Community Builder</span>
+              <span class="founder-tag">Preacher</span>
+              <span class="founder-tag">Visionary</span>
+            </div>
+          </div>
+        </div>
+        <div class="founder-card reveal delay-2">
+          <div class="founder-photo-area">
+            <div class="founder-photo-placeholder" aria-label="Photo placeholder for Jessica Jane Richard">J</div>
+            <div class="founder-photo-label">Upload photo — see instructions in code</div>
+          </div>
+          <div class="founder-body">
+            <div class="founder-role">Co-founder & Trustee</div>
+            <h3 class="founder-name">Jessica Jane Richard</h3>
+            <div class="founder-title">Young Changemaker · Operations Lead</div>
+            <p class="founder-bio">Jessica brings youthful energy, empathy, and meticulous attention to Elvar Trust. A
+              passionate advocate for social equity, she has been involved in community service from a young age —
+              volunteering at food drives, education camps, and mental health awareness events.</p>
+            <p class="founder-bio">She leads the trust's on-ground operations, volunteer coordination, and community
+              outreach programmes, ensuring that every initiative is executed with care, dignity, and purpose.</p>
+            <div class="founder-tags">
+              <span class="founder-tag">Operations</span>
+              <span class="founder-tag">Volunteer Coordinator</span>
+              <span class="founder-tag">Youth Leader</span>
+              <span class="founder-tag">Changemaker</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSION -->
+  <section id="mission">
+    <div class="section-inner">
+      <span class="section-eyebrow">What We Do</span>
+      <h2 class="section-title reveal">Four Pillars of Service</h2>
+      <p class="section-sub reveal">Every initiative we run is anchored in one of four critical areas of human need.</p>
+      <div class="mission-grid">
+        <div class="mission-card edu reveal delay-1" data-icon="📚">
+          <div class="mission-icon">📚</div>
+          <h3>Education</h3>
+          <p>Supporting children and young people with school supplies, scholarships, and tuition support — because
+            every mind deserves a chance to grow.</p>
+        </div>
+        <div class="mission-card food reveal delay-2" data-icon="🌾">
+          <div class="mission-icon">🌾</div>
+          <h3>Food</h3>
+          <p>Running community feeding programs and distributing groceries — ensuring no one in our reach goes to bed
+            hungry. Dignity begins at the table.</p>
+        </div>
+        <div class="mission-card health reveal delay-3" data-icon="🏥">
+          <div class="mission-icon">🏥</div>
+          <h3>Healthcare</h3>
+          <p>Facilitating access to basic medical care, medicines, and health checkups for underserved families —
+            because health is a right, not a privilege.</p>
+        </div>
+        <div class="mission-card mental reveal delay-4" data-icon="🕊️">
+          <div class="mission-icon">🕊️</div>
+          <h3>Mental Health</h3>
+          <p>Providing counselling referrals, awareness programs, and compassionate listening — breaking the stigma one
+            conversation at a time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <div class="section-inner">
+      <span class="section-eyebrow">Our Work in Action</span>
+      <h2 class="section-title reveal">Gallery</h2>
+      <p class="section-sub reveal">Click a category to filter. Click any photo to open it full size with details.</p>
+      <div class="gallery-tabs reveal">
+        <button class="gtab active" onclick="filterGallery('all',this)">All Photos</button>
+        <button class="gtab" onclick="filterGallery('edu',this)">📚 Education</button>
+        <button class="gtab" onclick="filterGallery('food',this)">🌾 Food</button>
+        <button class="gtab" onclick="filterGallery('health',this)">🏥 Healthcare</button>
+        <button class="gtab" onclick="filterGallery('mental',this)">🕊️ Mental Health</button>
+      </div>
+      <div id="galleryDesc" style="display:none;" class="gallery-desc" role="status"></div>
+      <div class="gallery-grid" id="galleryGrid" role="list" aria-label="Photo gallery"></div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer"
+    onclick="if(event.target===this)closeLb()">
+    <div class="lb-inner">
+      <button class="lb-close" onclick="closeLb()" aria-label="Close photo viewer">✕</button>
+      <button class="lb-nav lb-prev" onclick="lbNav(-1)" aria-label="Previous photo">‹</button>
+      <button class="lb-nav lb-next" onclick="lbNav(1)" aria-label="Next photo">›</button>
+      <span class="lb-counter" id="lbCounter" aria-live="polite"></span>
+      <img class="lb-img" id="lbImg" src="" alt="">
+      <div class="lb-body">
+        <div class="lb-title" id="lbTitle"></div>
+        <div class="lb-desc" id="lbDesc"></div>
+        <span class="lb-cat" id="lbCat"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONATE -->
+  <section id="donate" aria-label="Donate to Elvar Trust">
+    <div class="section-inner">
+      <div class="donate-grid">
+        <div>
+          <span class="section-eyebrow reveal">Make a Difference</span>
+          <h2 class="section-title reveal">Give the Gift<br>of Change</h2>
+          <p class="section-sub reveal">Every rupee goes directly toward education, meals, healthcare, or mental health
+            support for someone who needs it.</p>
+          <div class="amount-grid reveal">
+            <button class="amt-btn" onclick="pickAmt(500,this)">₹500</button>
+            <button class="amt-btn" onclick="pickAmt(1000,this)">₹1,000</button>
+            <button class="amt-btn" onclick="pickAmt(2500,this)">₹2,500</button>
+            <button class="amt-btn" onclick="pickAmt(5000,this)">₹5,000</button>
+            <button class="amt-btn" onclick="pickAmt(10000,this)">₹10,000</button>
+            <button class="amt-btn" onclick="pickAmt(25000,this)">₹25,000</button>
+          </div>
+          <input type="number" class="custom-amt" id="donAmt" placeholder="Or enter custom amount (₹)" min="100"
+            max="10000000" inputmode="numeric" aria-label="Custom donation amount">
+
+          <div
+            style="font-size:0.82rem;color:rgba(255,255,255,0.75);margin-bottom:1rem;line-height:1.5;padding:0.5rem;background:rgba(0,0,0,0.15);border-radius:8px;">
+            <em>Note: As per Indian FCRA regulations, we are currently only able to accept donations from Indian
+              citizens (including NRIs) possessing a valid Indian PAN and Indian bank account.</em>
+          </div>
+
+          <div class="donor-fields">
+            <div class="donor-fields-title">Details for 80G Tax Receipt</div>
+            <div class="donor-field-group">
+              <label for="donorName">Full Name *</label>
+              <input type="text" id="donorName" class="donor-input" placeholder="As it appears on your PAN card"
+                maxlength="100" required aria-required="true" autocomplete="name">
+            </div>
+            <div class="donor-field-group">
+              <label for="donorPAN">PAN Number *</label>
+              <input type="text" id="donorPAN" class="donor-input pan-input" placeholder="ABCDE1234F" maxlength="10"
+                required aria-required="true" pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}"
+                title="Enter a valid 10-character PAN number (e.g. ABCDE1234F)" autocomplete="off" spellcheck="false">
+              <div class="donor-fields-note">10 characters — 5 letters, 4 numbers, 1 letter</div>
+            </div>
+            <div class="donor-field-group">
+              <label for="donorAddress">Full Billing Address *</label>
+              <input type="text" id="donorAddress" class="donor-input"
+                placeholder="House / Flat, Street, City, PIN Code" maxlength="200" required aria-required="true"
+                autocomplete="street-address">
+            </div>
+          </div>
+
+          <button class="rzp-btn" onclick="pay()" aria-label="Donate online via Razorpay">💛 Donate via Razorpay — UPI /
+            Card / Net Banking</button>
+          <div class="bank-box reveal">
+            <h4>🏦 Direct Bank Transfer</h4>
+            <div class="bank-row"><span class="lbl">Account Name</span><span class="val">Elvar Trust</span></div>
+            <div class="bank-row"><span class="lbl">Account Number</span><span class="val">XXXX XXXX XXXX</span></div>
+            <div class="bank-row"><span class="lbl">IFSC Code</span><span class="val">XXXXXXX</span></div>
+            <div class="bank-row"><span class="lbl">Bank & Branch</span><span class="val">Add your bank here</span>
+            </div>
+            <div class="bank-row"><span class="lbl">Account Type</span><span class="val">Current / Savings</span></div>
+            <div style="text-align:center;margin-top:1rem;">
+              <span class="upi-pill">📱 UPI: yourupiid@bank</span>
+            </div>
+            <p style="font-size:0.75rem;opacity:0.6;margin-top:1rem;text-align:center;line-height:1.6;">WhatsApp payment
+              screenshot to +91 XXXXX XXXXX<br>for acknowledgement and 80G receipt.</p>
+          </div>
+        </div>
+        <div>
+          <div class="donate-impact reveal">
+            <div class="impact-item">
+              <div class="impact-emoji">📚</div>
+              <div><strong>₹500</strong><span>Buys a full term's stationery kit for one child</span></div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-emoji">🌾</div>
+              <div><strong>₹1,000</strong><span>Feeds a family of four for one full week</span></div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-emoji">🏥</div>
+              <div><strong>₹2,500</strong><span>Covers essential medicines for a month</span></div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-emoji">🕊️</div>
+              <div><strong>₹5,000</strong><span>Funds a professional counselling session</span></div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-emoji">🌟</div>
+              <div><strong>₹10,000</strong><span>Sponsors a child's education for a full term</span></div>
+            </div>
+          </div>
+          <div class="donate-trust reveal">
+            <div class="trust-line">🔐 All online payments are secured via Razorpay</div>
+            <div class="trust-line">📄 80G tax exemption receipts provided on request</div>
+            <div class="trust-line">📊 Annual financial statements published on this website</div>
+            <div class="trust-line">🏛️ Registered Charitable Trust — PAN: XXXXXXXXXX</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+     VOLUNTEER FORM — Web3Forms (replaces Formspree)
+     Get your free access key at: https://web3forms.com
+     Paste your key in the access_key hidden field below.
+     Free tier: 250 submissions/month. No account login needed.
+     ═══════════════════════════════════════════════════════════════ -->
+  <section id="volunteer">
+    <div class="section-inner">
+      <div class="vol-grid">
+        <div>
+          <span class="section-eyebrow reveal">Join Our Team</span>
+          <h2 class="section-title reveal">Volunteer with<br>Elvar Trust</h2>
+          <p class="section-sub reveal">Every person has something valuable to offer. Whether it's an hour a month or a
+            weekend a week — you belong here.</p>
+          <ul class="vol-reasons" role="list">
+            <li class="vol-reason reveal delay-1">
+              <div class="vol-dot" aria-hidden="true">📚</div>
+              <p><strong>Teach or Tutor</strong>Support children's education through tutoring, reading circles, or skill
+                workshops in Bangalore communities.</p>
+            </li>
+            <li class="vol-reason reveal delay-2">
+              <div class="vol-dot" aria-hidden="true">🌾</div>
+              <p><strong>Feed a Family</strong>Help pack, transport, and distribute meals and monthly grocery kits to
+                families in need.</p>
+            </li>
+            <li class="vol-reason reveal delay-3">
+              <div class="vol-dot" aria-hidden="true">🏥</div>
+              <p><strong>Health Camps</strong>Medical professionals and support volunteers run our free community health
+                checkup days.</p>
+            </li>
+            <li class="vol-reason reveal delay-4">
+              <div class="vol-dot" aria-hidden="true">🕊️</div>
+              <p><strong>Listen and Support</strong>Trained listeners and counsellors provide emotional support and run
+                mental health awareness sessions.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="form-card reveal">
+          <h3>Register as a Volunteer</h3>
+          <form action="https://api.web3forms.com/submit" method="POST" onsubmit="handleForm(event,'volOk')" novalidate>
+            <!-- ★ STEP 1: Paste your Web3Forms access key here (get it free at web3forms.com) -->
+            <input type="hidden" name="access_key" value="4714d8fa-6778-42ea-9f94-6b2a408c1b80">
+            <!-- Email subject line that arrives in your inbox -->
+            <input type="hidden" name="subject" value="New Volunteer Registration — Elvar Trust">
+            <!-- Sender label shown in your inbox -->
+            <input type="hidden" name="from_name" value="Elvar Trust Website">
+            <!-- Honeypot spam trap: bots tick this checkbox; real users never see it -->
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" aria-hidden="true">
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="v-fname">First Name *</label>
+                <input type="text" id="v-fname" name="firstName" required placeholder="First name" maxlength="60"
+                  autocomplete="given-name">
+              </div>
+              <div class="form-group">
+                <label for="v-lname">Last Name *</label>
+                <input type="text" id="v-lname" name="lastName" required placeholder="Last name" maxlength="60"
+                  autocomplete="family-name">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="v-email">Email *</label>
+                <input type="email" id="v-email" name="email" required placeholder="you@email.com" maxlength="120"
+                  autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="v-phone">Phone *</label>
+                <input type="tel" id="v-phone" name="phone" required placeholder="+91 XXXXX XXXXX" maxlength="15"
+                  autocomplete="tel" pattern="[+]?[0-9\s\-]{8,15}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="v-area">Area of Interest *</label>
+              <select id="v-area" name="area" required>
+                <option value="">-- Select a cause --</option>
+                <option value="Education">Education</option>
+                <option value="Food Distribution">Food Distribution</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Mental Health">Mental Health</option>
+                <option value="General">General / Any</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="v-avail">Availability</label>
+              <select id="v-avail" name="availability">
+                <option value="Weekends only">Weekends only</option>
+                <option value="Weekdays flexible">Weekdays (flexible)</option>
+                <option value="Both">Both weekdays and weekends</option>
+                <option value="Events only">One-off events only</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="v-skills">Skills / Experience (optional)</label>
+              <textarea id="v-skills" name="skills" placeholder="E.g., I'm a doctor, or I teach mathematics..."
+                maxlength="500"></textarea>
+            </div>
+            <button type="submit" class="form-submit">Register as Volunteer →</button>
+            <div class="form-success" id="volOk" role="status" aria-live="polite">🎉 Thank you! We'll be in touch within
+              2–3 days.</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS — GOOGLE CALENDAR -->
+  <section id="events">
+    <div class="section-inner">
+      <span class="section-eyebrow reveal">What's Happening</span>
+      <h2 class="section-title reveal">Events Calendar</h2>
+      <p class="section-sub reveal">Our live calendar of community events, health camps, food drives, and more — updated
+        directly from Google Calendar.</p>
+      <div class="cal-wrapper reveal">
+        <div class="cal-tip">
+          <span style="font-size:1.3rem;flex-shrink:0;">📅</span>
+          <span>This calendar is powered by <strong>Google Calendar</strong>. To add events, open <a
+              href="https://calendar.google.com" target="_blank" rel="noopener noreferrer">calendar.google.com</a> and
+            add events to your <strong>Elvar Trust</strong> calendar — they appear here automatically. No website
+            editing needed.</span>
+        </div>
+        <iframe class="gcal-embed"
+          src="https://calendar.google.com/calendar/embed?src=e69c2d2e88b6fe0e29233b2d940c43aaea8389ef8acb65469ea77c15e42b5940%40group.calendar.google.com&ctz=Asia%2FKolkata&showTitle=0&showNav=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=MONTH"
+          frameborder="0" scrolling="no" title="Elvar Trust Events Calendar" loading="lazy" style="border-radius:14px;">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+     ENQUIRY FORM — Web3Forms (replaces Formspree)
+     Same access key as the volunteer form above — one key works
+     for all forms on your site.
+     ═══════════════════════════════════════════════════════════════ -->
+  <section id="enquiry">
+    <div class="section-inner">
+      <div class="enquiry-inner">
+        <span class="section-eyebrow reveal">Say Hello</span>
+        <h2 class="section-title reveal">Questions or Comments?</h2>
+        <p class="section-sub reveal" style="margin-bottom:2.5rem;">Whether you want to partner, ask about our work, or
+          just encourage us — we'd love to hear from you.</p>
+        <div class="form-card reveal">
+          <form action="https://api.web3forms.com/submit" method="POST" onsubmit="handleForm(event,'enqOk')" novalidate>
+            <!-- ★ STEP 2: Paste your Web3Forms access key here (same key as above) -->
+            <input type="hidden" name="access_key" value="4714d8fa-6778-42ea-9f94-6b2a408c1b80">
+            <input type="hidden" name="subject" value="Enquiry — Elvar Trust Website">
+            <input type="hidden" name="from_name" value="Elvar Trust Website">
+            <!-- Honeypot spam trap -->
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" aria-hidden="true">
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="e-name">Name *</label>
+                <input type="text" id="e-name" name="name" required placeholder="Your name" maxlength="100"
+                  autocomplete="name">
+              </div>
+              <div class="form-group">
+                <label for="e-email">Email *</label>
+                <input type="email" id="e-email" name="email" required placeholder="you@email.com" maxlength="120"
+                  autocomplete="email">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="e-subject">Subject</label>
+              <select id="e-subject" name="subject_type">
+                <option value="General Enquiry">General Enquiry</option>
+                <option value="Partnership">Partnership / Collaboration</option>
+                <option value="Donation Query">Donation Query</option>
+                <option value="Media">Media / Press</option>
+                <option value="Volunteer Query">Volunteer Query</option>
+                <option value="Feedback">Feedback</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="e-msg">Message *</label>
+              <textarea id="e-msg" name="message" required placeholder="Tell us what's on your mind..."
+                style="min-height:130px;" maxlength="2000"></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send Message →</button>
+            <div class="form-success" id="enqOk" role="status" aria-live="polite">💌 Thank you! We'll reply within 2
+              working days.</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-inner">
+      <span class="section-eyebrow reveal">Find Us</span>
+      <h2 class="section-title reveal">Contact Us</h2>
+      <div class="contact-grid">
+        <div class="reveal-left">
+          <div class="contact-info">
+            <h3>Get in Touch</h3>
+            <div class="contact-item">
+              <div class="contact-icon" aria-hidden="true">📍</div>
+              <div class="text"><strong>Address</strong><span>7, Ranoji Rao Road, Basavanagudi<br>Bangalore — 560 004,
+                  Karnataka</span></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon" aria-hidden="true">📞</div>
+              <div class="text"><strong>Phone</strong><span>+91 XXXXX XXXXX<br>Mon–Sat, 9 AM – 6 PM</span></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon" aria-hidden="true">📧</div>
+              <div class="text"><strong>Email</strong><span><a
+                    href="mailto:hello@elvartrust.org">hello@elvartrust.org</a><br><a
+                    href="mailto:donations@elvartrust.org">donations@elvartrust.org</a></span></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon" aria-hidden="true">🏛️</div>
+              <div class="text"><strong>Trust Registration</strong><span>Registration No: XXXXXXXXXX<br>PAN: XXXXXXXXXX
+                  · 80G Eligible</span></div>
+            </div>
+            <div class="social-row">
+              <a href="https://facebook.com" class="social-btn" target="_blank" rel="noopener noreferrer"
+                aria-label="Facebook">f</a>
+              <a href="https://instagram.com" class="social-btn" target="_blank" rel="noopener noreferrer"
+                aria-label="Instagram">📷</a>
+              <a href="https://wa.me/91XXXXXXXXXX" class="social-btn" target="_blank" rel="noopener noreferrer"
+                aria-label="WhatsApp">W</a>
+              <a href="https://youtube.com" class="social-btn" target="_blank" rel="noopener noreferrer"
+                aria-label="YouTube">▶</a>
+            </div>
+          </div>
+        </div>
+        <div class="reveal-right">
+          <div class="contact-map-box">
+            <div>
+              <p style="font-size:2rem;margin-bottom:0.5rem;" aria-hidden="true">📍</p>
+              <p style="font-weight:700;font-size:1.1rem;margin-bottom:0.3rem;">7, Ranoji Rao Road</p>
+              <p style="opacity:0.8;margin-bottom:1.2rem;">Basavanagudi, Bangalore 560004</p>
+              <a href="https://maps.google.com/?q=7+Ranoji+Rao+Road+Basavanagudi+Bangalore+560004" target="_blank"
+                rel="noopener noreferrer"
+                style="background:white;color:var(--terra);padding:0.6rem 1.4rem;border-radius:24px;font-weight:700;font-size:0.88rem;text-decoration:none;display:inline-block;"
+                aria-label="Open location in Google Maps">
+                Open in Google Maps →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo-row">
+            <div class="f-logo" aria-hidden="true">E</div>
+            <span class="f-name">Elvar Trust</span>
+          </div>
+          <p>A registered charitable trust based in Basavanagudi, Bangalore — serving through Education, Food,
+            Healthcare, and Mental Health. Given to Give.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <a href="#about">About Us</a>
+          <a href="#founders">Our Founders</a>
+          <a href="#mission">Our Mission</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#events">Events</a>
+          <a href="#volunteer">Volunteer</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <span>7, Ranoji Rao Road<br>Basavanagudi, Bangalore 560004</span>
+          <span><a href="mailto:hello@elvartrust.org">hello@elvartrust.org</a></span>
+          <span>+91 XXXXX XXXXX</span>
+          <span style="margin-top:0.5rem;">Reg. No: XXXXXXXXXX<br>PAN: XXXXXXXXXX</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Elvar Trust. All rights reserved. Registered Charitable Trust · 80G Eligible</span>
+        <span>Made with ❤️ in Bangalore</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+  <script>
+    'use strict';
+
+    function sanitize(str) {
+      const d = document.createElement('div');
+      d.textContent = String(str);
+      return d.innerHTML;
+    }
+
+    // ── SCROLL REVEAL ──
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => revealObserver.observe(el));
+
+    // ── NAV ──
+    window.addEventListener('scroll', () => {
+      document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 30);
+    }, { passive: true });
+
+    let menuOpen = false;
+    function toggleMenu() {
+      menuOpen = !menuOpen;
+      const menu = document.getElementById('mobileMenu');
+      const btn = document.getElementById('hamburger');
+      menu.classList.toggle('open', menuOpen);
+      btn.setAttribute('aria-expanded', String(menuOpen));
+    }
+    function closeMenu() {
+      menuOpen = false;
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
+    }
+
+    // ── GALLERY ──
+    const CAT_COLORS = { edu: '#D4930A', food: '#5E8A62', health: '#C0392B', mental: '#5C6BC0' };
+    const CAT_LABELS = { edu: 'Education', food: 'Food & Nutrition', health: 'Healthcare', mental: 'Mental Health' };
+    const CAT_DESCS = {
+      edu: 'Our education programs support children across Bangalore with school kits, tutoring, and scholarships — ensuring no child is left behind because of circumstance.',
+      food: 'From weekly community meals to monthly grocery distribution, we ensure families always have food on the table. Every meal is served with dignity.',
+      health: 'Through free health camps, medicine drives, and doctor referrals, we bring essential healthcare to families who cannot afford it.',
+      mental: 'Mental health is often the most overlooked need. We run awareness sessions, peer circles, and counselling referrals — breaking the silence one conversation at a time.'
+    };
+    const ITEMS = [
+      { cat: 'edu', title: 'Classroom Learning Support', img: 'https://images.unsplash.com/photo-1503676382389-4809596d5290?w=900&q=85', desc: 'Children at a community school in Bangalore receiving after-school tutoring from Elvar Trust volunteers, helping them keep pace with their curriculum.' },
+      { cat: 'edu', title: 'School Stationery Kit Drive', img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=900&q=85', desc: 'Young students receiving school kits — notebooks, pencils, and geometry sets — funded by generous donors. Every kit means a child ready to learn.' },
+      { cat: 'edu', title: 'Reading Circle Program', img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=900&q=85', desc: 'A Saturday reading program for children aged 6–12, building literacy and a love for books in a warm, nurturing space.' },
+      { cat: 'edu', title: 'Scholarship Felicitation', img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=85', desc: 'Students recognised for academic perseverance receive scholarship certificates — a moment of pride for their entire families.' },
+      { cat: 'food', title: 'Community Meal Distribution', img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=900&q=85', desc: 'Hot, nutritious meals served to over 80 families at our monthly community kitchen. Every dish is prepared by volunteers who believe dignity begins at the table.' },
+      { cat: 'food', title: 'Monthly Grocery Kit Drive', img: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=900&q=85', desc: 'Families receive a grocery kit with rice, dal, oil, and essentials — distributed every first Saturday at our Basavanagudi centre.' },
+      { cat: 'food', title: 'Volunteer Meal Packaging', img: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=900&q=85', desc: 'Volunteers packaging meals for distribution. What started as 20 families has grown to over 150 households each month.' },
+      { cat: 'health', title: 'Free Health Checkup Camp', img: 'https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=900&q=85', desc: 'A community health camp providing free blood pressure, sugar, and general checkups to over 200 residents — many visiting a doctor for the first time.' },
+      { cat: 'health', title: 'Free Medicine Distribution', img: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=900&q=85', desc: 'Essential medicines given free to elderly and low-income families. A small act that makes an enormous difference in their lives.' },
+      { cat: 'health', title: "Women's Wellness Day", img: 'https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=900&q=85', desc: "A dedicated health day for women featuring free consultations and maternal health awareness, honouring women's health as a priority." },
+      { cat: 'mental', title: 'Mental Wellness Awareness Session', img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=900&q=85', desc: 'A community session addressing anxiety, stress, and the importance of seeking help — attended by over 60 residents. Conversations that change lives.' },
+      { cat: 'mental', title: 'Peer Support Circle', img: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=900&q=85', desc: 'A safe weekly gathering where individuals share experiences under the gentle guidance of a trained counsellor. No judgement, only compassion.' },
+    ];
+
+    let activeFilter = 'all', visibleItems = [...ITEMS], lbIdx = 0;
+
+    function filterGallery(cat, btn) {
+      activeFilter = cat;
+      document.querySelectorAll('.gtab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const desc = document.getElementById('galleryDesc');
+      if (cat !== 'all' && CAT_DESCS[cat]) {
+        desc.textContent = CAT_DESCS[cat];
+        desc.style.display = 'block';
+      } else {
+        desc.style.display = 'none';
+      }
+      renderGallery();
+    }
+
+    function renderGallery() {
+      visibleItems = activeFilter === 'all' ? ITEMS : ITEMS.filter(i => i.cat === activeFilter);
+      const g = document.getElementById('galleryGrid');
+      g.innerHTML = '';
+      visibleItems.forEach((item, i) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'gallery-item';
+        wrapper.setAttribute('role', 'listitem');
+        wrapper.setAttribute('tabindex', '0');
+        wrapper.setAttribute('aria-label', item.title);
+
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = item.title;
+        img.src = item.img;
+        img.decoding = 'async';
+
+        const cap = document.createElement('div');
+        cap.className = 'thumb-cap';
+        cap.textContent = item.title;
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(cap);
+        wrapper.onclick = () => openLb(i);
+        wrapper.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLb(i); } };
+        g.appendChild(wrapper);
+      });
+    }
+
+    let lastFocusedElement = null;
+
+    function openLb(i) {
+      lastFocusedElement = document.activeElement;
+      lbIdx = i; updateLb();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflowY = 'hidden';
+      const closeBtn = document.querySelector('.lb-close');
+      if (closeBtn) closeBtn.focus();
+    }
+    function updateLb() {
+      const it = visibleItems[lbIdx];
+      const img = document.getElementById('lbImg');
+      img.src = it.img; img.alt = it.title;
+      document.getElementById('lbTitle').textContent = it.title;
+      document.getElementById('lbDesc').textContent = it.desc;
+      document.getElementById('lbCounter').textContent = `${lbIdx + 1} / ${visibleItems.length}`;
+      const cat = document.getElementById('lbCat');
+      cat.textContent = CAT_LABELS[it.cat];
+      cat.style.background = CAT_COLORS[it.cat];
+      cat.style.color = it.cat === 'edu' ? '#3A2010' : 'white';
+    }
+    function lbNav(d) { lbIdx = (lbIdx + d + visibleItems.length) % visibleItems.length; updateLb(); }
+    function closeLb() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflowY = 'visible';
+      if (lastFocusedElement) { lastFocusedElement.focus(); lastFocusedElement = null; }
+    }
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('lightbox').classList.contains('open')) return;
+      if (e.key === 'ArrowLeft') lbNav(-1);
+      if (e.key === 'ArrowRight') lbNav(1);
+      if (e.key === 'Escape') closeLb();
+    });
+    renderGallery();
+
+    // ── DONATION ──
+    let chosenAmt = 0;
+    function pickAmt(a, btn) {
+      const validated = Number.isInteger(a) && a > 0 ? a : 0;
+      chosenAmt = validated;
+      document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('donAmt').value = validated;
+    }
+
+    function pay() {
+      if (typeof Razorpay === 'undefined') {
+        showToast('⏳ Payment system is still loading. Please wait a moment and try again.');
+        return;
+      }
+      const rawAmt = parseInt(document.getElementById('donAmt').value, 10) || chosenAmt;
+      if (!rawAmt || rawAmt < 100 || rawAmt > 10000000 || !Number.isFinite(rawAmt)) {
+        showToast('⚠️ Please enter a valid donation amount (₹100 minimum, ₹1 Cr maximum).');
+        return;
+      }
+      const amt = Math.floor(rawAmt);
+      const donorName = document.getElementById('donorName').value.trim();
+      const donorPAN = document.getElementById('donorPAN').value.trim().toUpperCase();
+      const donorAddress = document.getElementById('donorAddress').value.trim();
+      if (!donorName || !donorPAN || !donorAddress) {
+        showToast('⚠️ Please fill in your Name, PAN, and Address for the 80G receipt.');
+        document.getElementById('donorName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+      if (!panPattern.test(donorPAN)) {
+        showToast('⚠️ PAN number format is invalid. Example: ABCDE1234F');
+        document.getElementById('donorPAN').focus();
+        return;
+      }
+      const safeName = String(donorName).replace(/[<>"']/g, '').slice(0, 100);
+      const safePAN = donorPAN.slice(0, 10);
+      const safeAddress = String(donorAddress).replace(/[<>"']/g, '').slice(0, 200);
+      try {
+        const rzp = new Razorpay({
+          key: 'YOUR_RAZORPAY_KEY_ID',
+          amount: amt * 100,
+          currency: 'INR',
+          name: 'Elvar Trust',
+          description: 'Charitable Donation — Given to Give',
+          theme: { color: '#B84A26' },
+          prefill: { name: safeName },
+          notes: {
+            donor_name: safeName,
+            donor_pan: safePAN,
+            donor_address: safeAddress,
+            purpose: '80G Tax Receipt — Elvar Trust'
+          },
+          handler: function (response) {
+            showToast('🎉 Thank you ' + safeName.split(' ')[0] + '! Payment ID: ' + sanitize(response.razorpay_payment_id) + '. Your 80G receipt will be sent shortly.');
+          },
+          modal: { ondismiss: () => showToast('Payment cancelled. You can try again anytime.') }
+        });
+        rzp.open();
+      } catch (e) {
+        showToast('⚠️ Add your Razorpay Key to activate online payments. Bank transfer details are shown below.');
+      }
+    }
+
+    // ── FORMS (Web3Forms) ──
+    // Web3Forms returns JSON: { success: true, message: "..." }
+    // We check data.success instead of response.ok for reliability.
+    function handleForm(e, okId) {
+      e.preventDefault();
+      const form = e.target;
+
+      // SECURITY: honeypot check — Web3Forms botcheck checkbox
+      // Real users never see or tick this; bots do. If checked, silently abort.
+      const honeypot = form.querySelector('input[name="botcheck"]');
+      if (honeypot && honeypot.checked) return;
+
+      // VALIDATION: trigger native browser validation tooltips
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      // SECURITY: verify form is submitting to Web3Forms HTTPS endpoint only
+      const action = form.getAttribute('action') || '';
+      if (!action.startsWith('https://api.web3forms.com/')) {
+        showToast('⚠️ Form configuration error. Please contact us by email.');
+        return;
+      }
+
+      // Disable submit button — prevents accidental double submission
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+
+      // Submit via fetch — page does NOT navigate away
+      fetch(action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // Success — hide the form, reveal the thank-you message
+            form.style.display = 'none';
+            const ok = document.getElementById(okId);
+            if (ok) { ok.style.display = 'block'; }
+          } else {
+            // Web3Forms returned an error (e.g. invalid key)
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Try Again →'; }
+            showToast('⚠️ Submission failed. Please try again or email us directly.');
+          }
+        })
+        .catch(() => {
+          // Network error
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Try Again →'; }
+          showToast('⚠️ Network error. Please check your connection and try again.');
+        });
+    }
+
+    // ── TOAST ──
+    let toastTimer = null;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = String(msg);
+      t.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 5000);
+    }
+  </script>
+
+  <!--
+═══════════════════════════════════════════════════════════════
+WHAT CHANGED IN THIS UPDATE — Web3Forms migration
+═══════════════════════════════════════════════════════════════
+FORMS
+ - Both forms now submit to https://api.web3forms.com/submit
+ - Formspree (formspree.io) has been completely removed
+ - Honeypot changed from text input name="_gotcha" (Formspree)
+   to checkbox name="botcheck" (Web3Forms standard)
+ - Hidden subject field renamed from "_subject" to "subject"
+   (Web3Forms uses unprefixed field names)
+ - Added "from_name" hidden field for cleaner inbox labels
+ - Enquiry form: select field renamed from "subject" to
+   "subject_type" to avoid conflict with the subject hidden field
+ - handleForm() now parses response as JSON and checks data.success
+   instead of response.ok (more reliable with Web3Forms API)
+ - URL security check updated from formspree.io to web3forms.com
+
+CSP HEADERS
+ - connect-src updated: formspree.io replaced with api.web3forms.com
+ - form-action updated: formspree.io replaced with api.web3forms.com
+
+ITEMS TO COMPLETE BEFORE GOING LIVE
+ ★ Replace 4714d8fa-6778-42ea-9f94-6b2a408c1b80 in the volunteer form (line ~480)
+ ★ Replace 4714d8fa-6778-42ea-9f94-6b2a408c1b80 in the enquiry form (line ~535)
+   (Both forms can use the exact same key — one key per site)
+   Get your free key at: https://web3forms.com — takes 60 seconds.
+ □ Replace YOUR_RAZORPAY_KEY_ID with your Razorpay key
+ □ Replace XXXX bank details with real account details
+ □ Replace +91 XXXXX XXXXX with real phone number
+ □ Replace social media links with real profile URLs
+ □ Replace trust registration number and PAN — all XXXXX
+═══════════════════════════════════════════════════════════════
+-->
+
+</body>
+
+</html>
